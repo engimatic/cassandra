@@ -59,6 +59,7 @@ public class DatabaseDescriptorRefTest
     "org.apache.cassandra.auth.IAuthenticator",
     "org.apache.cassandra.auth.IAuthorizer",
     "org.apache.cassandra.auth.IRoleManager",
+    "org.apache.cassandra.auth.INetworkAuthorizer",
     "org.apache.cassandra.config.DatabaseDescriptor",
     "org.apache.cassandra.config.ConfigurationLoader",
     "org.apache.cassandra.config.Config",
@@ -77,6 +78,7 @@ public class DatabaseDescriptorRefTest
     "org.apache.cassandra.config.EncryptionOptions$ClientEncryptionOptions",
     "org.apache.cassandra.config.EncryptionOptions$ServerEncryptionOptions",
     "org.apache.cassandra.config.EncryptionOptions$ServerEncryptionOptions$InternodeEncryption",
+    "org.apache.cassandra.config.EncryptionOptions$ServerEncryptionOptions$OutgoingEncryptedPortSource",
     "org.apache.cassandra.config.YamlConfigurationLoader",
     "org.apache.cassandra.config.YamlConfigurationLoader$PropertiesChecker",
     "org.apache.cassandra.config.YamlConfigurationLoader$PropertiesChecker$1",
@@ -126,6 +128,7 @@ public class DatabaseDescriptorRefTest
     "org.apache.cassandra.config.EncryptionOptions$ServerEncryptionOptionsCustomizer",
     "org.apache.cassandra.ConsoleAppenderBeanInfo",
     "org.apache.cassandra.ConsoleAppenderCustomizer",
+    "org.apache.cassandra.locator.InetAddressAndPort"
     };
 
     static final Set<String> checkedClasses = new HashSet<>(Arrays.asList(validClasses));
@@ -216,10 +219,10 @@ public class DatabaseDescriptorRefTest
             method.invoke(null);
 
             if ("clientInitialization".equals(methodName) &&
-                threadCount + 1 == threads.getThreadCount())
+                threadCount + 2 == threads.getThreadCount())
             {
-                // ignore the "AsyncAppender-Worker-ASYNC" thread
-                threadCount++;
+                // ignore the "AsyncAppender-Worker-ASYNC" and "logback-1" threads
+                threadCount = threadCount + 2;
             }
 
             if (threadCount != threads.getThreadCount())
